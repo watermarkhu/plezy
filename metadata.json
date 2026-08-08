@@ -1,0 +1,36 @@
+{
+  "cli_version": "0.9.0",
+  "checkpoint_id": "01KZG9TVMEYV31JGND2X6Z0WEV",
+  "strategy": "manual-commit",
+  "branch": "android-subtitle-key",
+  "checkpoints_count": 3,
+  "files_touched": [
+    "android/app/src/main/kotlin/com/edde746/plezy/MainActivity.kt",
+    "lib/main.dart",
+    "lib/services/captions_service.dart",
+    "lib/widgets/overlay_sheet.dart",
+    "lib/widgets/video_controls/parts/key_events.dart",
+    "lib/widgets/video_controls/parts/track_controls.dart",
+    "lib/widgets/video_controls/video_controls.dart",
+    "lib/widgets/video_controls/widgets/track_chapter_controls.dart",
+    "test/screens/video_player/captions_key_toggle_test.dart",
+    "test/services/captions_service_test.dart",
+    "test/widgets/video_controls/captions_key_toggle_test.dart"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 340634,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 8199424,
+    "output_tokens": 19206,
+    "api_call_count": 116
+  }
+}

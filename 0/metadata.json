@@ -1,0 +1,89 @@
+{
+  "cli_version": "0.9.0",
+  "checkpoint_id": "01KZG9TVMEYV31JGND2X6Z0WEV",
+  "session_id": "ses_01fb42517ffe6Ev7TaAgKo6SZH",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-08T09:04:12.775556371Z",
+  "branch": "android-subtitle-key",
+  "checkpoints_count": 3,
+  "save_step_count": 3,
+  "files_touched": [
+    "android/app/src/main/kotlin/com/edde746/plezy/MainActivity.kt",
+    "lib/main.dart",
+    "lib/services/captions_service.dart",
+    "lib/widgets/overlay_sheet.dart",
+    "lib/widgets/video_controls/parts/key_events.dart",
+    "lib/widgets/video_controls/parts/track_controls.dart",
+    "lib/widgets/video_controls/video_controls.dart",
+    "lib/widgets/video_controls/widgets/track_chapter_controls.dart",
+    "test/screens/video_player/captions_key_toggle_test.dart",
+    "test/services/captions_service_test.dart",
+    "test/widgets/video_controls/captions_key_toggle_test.dart"
+  ],
+  "agent": "OpenCode",
+  "model": "deepseek-v4-flash-free",
+  "turn_id": "e99142e19ffc",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 340634,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 8199424,
+    "output_tokens": 19206,
+    "api_call_count": 116
+  },
+  "session_metrics": {
+    "turn_count": 3
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-08T09:04:12.71991009Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 318,
+    "total_committed": 0,
+    "total_lines_changed": 318,
+    "agent_percentage": 0,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 553,
+      "user_lines_removed": 318,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".opencode/plugins/entire.ts": 272,
+        "lib/widgets/overlay_sheet.dart": 34,
+        "lib/widgets/video_controls/parts/key_events.dart": 18,
+        "lib/widgets/video_controls/widgets/track_chapter_controls.dart": 1,
+        "test/widgets/video_controls/captions_key_toggle_test.dart": 228
+      },
+      "user_removed_per_file": {
+        "android/app/src/main/kotlin/com/edde746/plezy/MainActivity.kt": 10,
+        "lib/main.dart": 2,
+        "lib/services/captions_service.dart": 30,
+        "lib/widgets/overlay_sheet.dart": 6,
+        "lib/widgets/video_controls/parts/track_controls.dart": 26,
+        "lib/widgets/video_controls/video_controls.dart": 7,
+        "test/screens/video_player/captions_key_toggle_test.dart": 199,
+        "test/services/captions_service_test.dart": 38
+      }
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    },
+    {
+      "checkpoint_number": 3,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 281,
+      "agent_lines_removed": 318
+    }
+  ]
+}

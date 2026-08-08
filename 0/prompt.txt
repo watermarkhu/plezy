@@ -1,0 +1,168 @@
+Use gh to get to the current open PR of this branch and look at the review comment
+
+---
+
+yes please
+
+---
+
+ask again
+
+---
+
+yeah
+
+---
+
+check in @CONTRIBUTING.md what needs to be tested. skip e2e tests
+Called the Read tool with the following input: {"filePath":"/home/watermarkhu/repositories/plezy/CONTRIBUTING.md"}
+<path>/home/watermarkhu/repositories/plezy/CONTRIBUTING.md</path>
+<type>file</type>
+<content>
+1: # Contributing
+2: 
+3: ## Getting Started
+4: 
+5: 1. Fork and clone the repository
+6: 2. Run `flutter pub get` to install dependencies
+7: 3. Run `scripts/codegen.sh` to generate translations and Dart model code
+8: 4. Start developing!
+9: 
+10: ## Development
+11: 
+12: - Follow Dart/Flutter conventions
+13: - Run `dart format .` to format Dart code (note: generated files like `*.g.dart` are excluded from CI checks)
+14: - Run `scripts/format_native.sh --fix` to format Kotlin, Swift, C++, C, Objective-C, and native headers
+15: - Run `flutter analyze` before submitting to check for issues
+16: - Run `scripts/run_tests.sh` to run the test suite (same as `flutter test`, but scaled to your core count)
+17: - Test your changes thoroughly
+18: 
+19: ### Code Quality Checks
+20: 
+21: The project includes automated CI checks that run on all pull requests:
+22: 
+23: 1. **Code Formatting**: Ensures code follows Dart and native formatting standards
+24:    - Run locally: `dart format .` to format Dart files
+25:    - Run locally: `scripts/format_native.sh --fix` to format native files
+26:    - Note: CI only checks non-generated files (excludes `.g.dart`, `.freezed.dart`)
+27:    - Generated files are reformatted automatically by build tools
+28: 
+29: 2. **Static Analysis**: Checks for code issues and potential bugs
+30:    - Run locally: `flutter analyze`
+31:    - Note: CI excludes generated files from analysis (configured in `analysis_options.yaml`)
+32: 
+33: 3. **Generated Code**: Ensures generated translations and model files are current
+34:    - Run locally: `scripts/codegen.sh --check`
+35: 
+36: 4. **Tests**: Runs unit and widget tests (when available)
+37:    - Run locally: `scripts/run_tests.sh`
+38:    - This is `flutter test` with `-j` set to the core count. The default is half your cores, which
+39:      leaves most of the machine idle because the suite is dominated by per-file compilation.
+40:      Arguments are forwarded, so `scripts/run_tests.sh test/widgets/some_test.dart` works.
+41: 
+42: All these checks must pass before your changes can be merged.
+43: 
+44: ### Maestro end-to-end tests
+45: 
+46: Android E2E tests use [Maestro](https://maestro.mobile.dev/) against a disposable, pre-seeded Jellyfin container.
+47: 
+48: Prerequisites: Java 17, Flutter and Android SDK/platform tools, a running Android emulator, Docker, and the
+49: [Maestro CLI](https://docs.maestro.dev/getting-started/installing-maestro).
+50: 
+51: Run the suites from the repository root (`py -3` can replace `python3` on Windows):
+52: 
+53: ```bash
+54: python3 scripts/run_maestro.py basic    # Basic user flows
+55: python3 scripts/run_maestro.py catalog  # Catalog and music flows
+56: python3 scripts/run_maestro.py media    # Codec playback and track selection
+57: ```
+58: 
+59: Run one flow with `--flow`:
+60: 
+61: ```bash
+62: python3 scripts/run_maestro.py basic --flow .maestro/flows/04_search.yaml
+63: ```
+64: 
+65: Use `--skip-build` to reuse the debug APK and `--skip-jellyfin-build` to reuse the Jellyfin image. Set
+66: `--device <adb-serial>` when multiple devices are connected; physical devices also require `--adb-reverse`.
+67: 
+68: Top-level flows live in `.maestro/flows/`, shared setup in `.maestro/subflows/`, and focused regressions in
+69: `.maestro/regression_flows/`. Automatic PR groups are declared in `scripts/run_maestro_ci.py::GROUPS`. Every top-level
+70: regression flow must be registered either there or in `DESTRUCTIVE_MANUAL_TARGETS`; reusable subflows are not
+71: independent tests. A manual-only classification must state why the flow cannot run automatically and must not be
+72: described as CI coverage. `.github/workflows/e2e.yml` runs only automatic targets and uploads diagnostics on failure.
+73: 
+74: The profile-isolation and profile-teardown regressions create and remove profile connections, so they are a destructive
+75: manual target rather than automatic PR coverage. Run them only against the pre-seeded Jellyfin fixture and a disposable
+76: emulator, using the required opt-in:
+77: 
+78: ```bash
+79: python3 scripts/run_maestro_ci.py profile-regressions --disposable-emulator
+80: ```
+81: 
+82: The target refuses to start without `--disposable-emulator`. Each profile flow writes to its own Jellyfin log and
+83: diagnostics directory under `build/maestro-profile-regressions/`.
+84: 
+85: ### Production container image updates
+86: 
+87: Production images in `server/Dockerfile` and `server/docker-compose.yml` use a readable version or source-revision tag
+88: plus an authoritative multi-platform index digest. The adjacent `Platforms` declaration records the supported
+89: `linux/amd64` and `linux/arm64` variants. Never replace these references with a mutable tag or a single-platform child
+90: manifest.
+91: 
+92: Update a production image only through a reviewed change:
+93: 
+94: 1. For the Bugs service, first record the running container's image ID, repository digest, platform, and OCI source
+95:    revision without printing its environment. Prefer that reviewed running identity; selecting anything else is a
+96:    service upgrade, not a routine pin refresh.
+97: 2. Review the upstream source revision and changelog, provenance, vulnerability results, and manifest contents. Resolve
+98:    the readable tag and digest-qualified reference independently and confirm they identify the same OCI index in two
+99:    clean caches. The index must contain both declared platforms; provenance/attestation descriptors do not count as
+100:    runnable platforms.
+101: 3. Change the readable tag, full `sha256` index digest, and adjacent platform declaration together. Include the old and
+102:    new identities, manifest/platform evidence, review findings, smoke results, and rollback notes in the change.
+103: 4. Before changing the Bugs digest, exercise it with non-production configuration and a disposable volume. Review
+104:    migrations, take a restorable `bugs_data` backup, then validate a cloned volume. A forward-only migration rolls back
+105:    with the prior digest and pre-change backup, not by changing the image reference alone.
+106: 5. Run `python3 scripts/check_container_image_pins.py`, `python3 scripts/test_check_container_image_pins.py`, and
+107:    `(cd server && go test ./...)`. Inspect the rendered Compose configuration and rebuilt images locally without
+108:    exposing configuration values. Do not publish or deploy from a review checkout, and never fall back to `latest` when
+109:    a digest is unavailable.
+110: 
+111: ## Internationalization (i18n)
+112: 
+113: This project uses `slang` for internationalization with JSON files.
+114: 
+115: ### Adding New Strings
+116: 
+117: 1. Add your string to `lib/i18n/strings.i18n.json`:
+118:    ```json
+119:    {
+120:      "section": {
+121:        "myNewString": "My new text"
+122:      }
+123:    }
+124:    ```
+125: 
+126: 2. Run `dart run slang` to regenerate translation files
+127: 
+128: 3. Use in your code:
+129:    ```dart
+130:    Text(t.section.myNewString)
+131:    ```
+132: 
+133: ### Adding New Languages
+134: 
+135: 1. Create new JSON file: `lib/i18n/[locale].i18n.json`
+136: 2. Copy structure from `en.i18n.json` and translate values
+137: 3. Run `dart run slang` to regenerate files
+138: 
+139: ### Guidelines
+140: 
+141: - Organize strings logically in nested objects
+142: - Use camelCase for keys
+143: - Keep strings concise and clear
+144: - Always run `dart run slang` after changes
+
+(End of file - total 144 lines)
+</content>
